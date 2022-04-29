@@ -24,3 +24,6 @@
 // my additional sys calls:
 #define SYS_getTicks    22
 #define SYS_getProcInfo 23
+
+// Phase 2 System Calls
+#define SYS_thread_create 24

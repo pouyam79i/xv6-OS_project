@@ -89,6 +89,7 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->ctime = ticks;
+  p->tstack = -1; //initialize stack top
 
   release(&ptable.lock);
 
@@ -568,3 +569,54 @@ getProcInfo(void){
 }
 
 // End of my changes.
+
+// Phase 2 System Calls:
+
+// Creates a new process like fork, but doesn't copy the process' memory
+// Only sets the stack pointer to new stack location
+int
+thread_create(void *stack){
+  int i, pid;
+  struct proc *np;
+  struct proc *curproc = myproc();
+
+  // Allocate process.
+  if((np = allocproc()) == 0){
+    return -1;
+  }
+
+  np->tstack = (int)stack + PGSIZE;
+
+  // copy parent stack to child thread
+  memmove(stack,curproc->tstack,PGSIZE);
+  // set thread stack poitner to bottom of stack
+  np->tf->esp = np->tstack - (curproc->tstack - curproc->tf->esp);
+  // same for thread base pointer
+  np->tf->ebp = np->tstack - (curproc->tstack - curproc->tf->ebp);
+
+  np->sz = curproc->sz;
+  np->parent = curproc;
+  *np->tf = *curproc->tf;
+
+  // Clear %eax so that create_thread returns 0 in the child thread.
+  np->tf->eax = 0;
+
+  //copy file descriptors
+  for(i = 0; i < NOFILE; i++)
+    if(curproc->ofile[i])
+      np->ofile[i] = filedup(curproc->ofile[i]);
+  np->cwd = idup(curproc->cwd);
+
+  safestrcpy(np->name, curproc->name, sizeof(curproc->name));
+
+  pid = np->pid;
+
+  acquire(&ptable.lock);
+
+  np->state = RUNNABLE;
+
+  release(&ptable.lock);
+
+  return pid;
+
+}

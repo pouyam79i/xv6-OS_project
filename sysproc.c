@@ -102,3 +102,12 @@ int
 sys_getProcInfo(void){
   return getProcInfo();
 }
+
+int
+sys_thread_create(void)
+{
+  int stack = 0;
+  if(argint(0, &stack) < 0) //to pass an integer value to a kernel level function
+    return -1;
+  return thread_create((void *)stack);
+}

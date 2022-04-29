@@ -106,6 +106,8 @@ extern int sys_uptime(void);
 // Adding my additional process:
 extern int sys_getTicks(void);
 extern int sys_getProcInfo(void);
+// Phase 2 System Calls
+extern int sys_thread_create(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -132,6 +134,8 @@ static int (*syscalls[])(void) = {
 // Adding my additional process:
 [SYS_getTicks] sys_getTicks,
 [SYS_getProcInfo] sys_getProcInfo,
+// Phase 2 System Calls
+[SYS_thread_create] sys_thread_create
 };
 
 void

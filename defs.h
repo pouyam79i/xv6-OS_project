@@ -123,6 +123,8 @@ void            yield(void);
 // here my addintional processes in proc.c:
 int             getTicks(void);
 int             getProcInfo(void);
+// Phase 2 System Calls:
+int             thread_create(void *stack);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
