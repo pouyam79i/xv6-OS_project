@@ -26,6 +26,8 @@ int uptime(void);
 // Adding my additional syscalls:
 int getTicks(void);
 int getProcInfo(void);
+// Phase 2 System Calls:
+int thread_create(void *stack);
 
 // ulib.c
 int stat(const char*, struct stat*);
