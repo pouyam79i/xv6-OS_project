@@ -588,7 +588,7 @@ thread_create(void *stack){
   np->tstack = (int)stack + PGSIZE;
 
   // copy parent stack to child thread
-  memmove(stack,curproc->tstack,PGSIZE);
+  memmove(stack,(void *)curproc->tstack,PGSIZE);
   // set thread stack poitner to bottom of stack
   np->tf->esp = np->tstack - (curproc->tstack - curproc->tf->esp);
   // same for thread base pointer
