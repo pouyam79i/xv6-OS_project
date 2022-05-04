@@ -52,6 +52,7 @@ struct proc {
   // Additional variable:
   uint ctime;
   uint tstack;                 // Stack top
+  uint tcount;                 // thread count, -1 if is thread
 };
 
 // Process memory is laid out contiguously, low addresses first:
