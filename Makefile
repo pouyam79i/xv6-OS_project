@@ -27,6 +27,7 @@ OBJS = \
 	uart.o\
 	vectors.o\
 	vm.o\
+	thread.o\
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
@@ -257,6 +258,7 @@ EXTRA=\
 	.gdbinit.tmpl gdbutil\
 	getTicksTest.c\
 	getProcInfoTest.c\
+	thread.c\
 
 dist:
 	rm -rf dist

@@ -1,6 +1,6 @@
-#include <thread.h>
-#include <types.h>
-#include <user.h>
+#include "thread.h"
+#include "types.h"
+#include "user.h"
 
 #define PGSIZE 4096
 
@@ -54,10 +54,12 @@ failed:
 
 // waits for thread id to be done
 int thread_joiner(int tid){
-    return thread_join(tid);
+    int res = thread_join(tid);
+    return res;
 }
 
 // returns thread ID
 int thread_id_getter(void){
-    return thread_id();
+    int id = thread_id();
+    return id;
 }
