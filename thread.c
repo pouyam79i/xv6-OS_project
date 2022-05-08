@@ -50,3 +50,14 @@ failed:
     free(nsptr);
     return -1;
 }
+
+
+// waits for thread id to be done
+int thread_joiner(int tid){
+    return thread_join(tid);
+}
+
+// returns thread ID
+int thread_id_getter(void){
+    return thread_id();
+}
