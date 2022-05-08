@@ -111,3 +111,18 @@ sys_thread_create(void)
     return -1;
   return thread_create((void *)stack);
 }
+
+int
+sys_thread_id(void)
+{
+  return thread_id();
+}
+
+int
+sys_thread_join(void)
+{
+  int tid = 0;
+  if(argint(0, &tid) < 0) //to pass an integer value to a kernel level function
+    return -1;
+  return thread_join(tid);
+}

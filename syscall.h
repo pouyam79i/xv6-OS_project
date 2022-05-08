@@ -27,3 +27,5 @@
 
 // Phase 2 System Calls
 #define SYS_thread_create 24
+#define SYS_thread_id 25
+#define SYS_thread_join 26

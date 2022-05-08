@@ -125,6 +125,8 @@ int             getTicks(void);
 int             getProcInfo(void);
 // Phase 2 System Calls:
 int             thread_create(void *stack);
+int             thread_id(void);
+int             thread_join(uint);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
