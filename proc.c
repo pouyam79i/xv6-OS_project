@@ -585,19 +585,23 @@ thread_create(void *stack){
   if((np = allocproc()) == 0){
     return -1;
   }
-
-  np->tstack = (int)stack + PGSIZE;
+  np->tstack = (int)((char *)stack + PGSIZE);
   np->tcount = -1; //np is a thread so -1
   curproc->tcount++; //add one thread to curproc thread count
 
+  acquire(&ptable.lock);
+  np->pgdir = curproc->pgdir;
+  np->sz = curproc->sz;
+  release(&ptable.lock);
+
   // copy parent stack to child thread
-  memmove(stack,(void *)curproc->tstack,PGSIZE);
+  memmove((void *)np->tstack, (void *)curproc->tstack, curproc->tstack - curproc->tf->esp);
   // set thread stack poitner to bottom of stack
   np->tf->esp = np->tstack - (curproc->tstack - curproc->tf->esp);
   // same for thread base pointer
   np->tf->ebp = np->tstack - (curproc->tstack - curproc->tf->ebp);
 
-  np->sz = curproc->sz;
+  
   np->parent = curproc;
   *np->tf = *curproc->tf;
 
@@ -656,6 +660,7 @@ thread_join(uint tid){
         p->parent = 0;
         p->name[0] = 0;
         p->killed = 0;
+        p->pgdir = 0;
         p->state = UNUSED;
         release(&ptable.lock);
         return 0;
