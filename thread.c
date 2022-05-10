@@ -7,7 +7,8 @@
 /* Create a new thread, starting with execution of START-ROUTINE
    getting passed ARG. 
    The new handle is stored in *NEWTHREAD. */
-int thread_creator(void (*fn) (void *), void *arg)
+int 
+thread_creator(void * (*fn) (void *), void *arg)
 {
     int tid = -1;                              // thread id
     int mod;
@@ -53,13 +54,17 @@ failed:
 
 
 // waits for thread id to be done
-int thread_joiner(int tid){
+int 
+thread_joiner(int tid)
+{
     int res = thread_join(tid);
     return res;
 }
 
 // returns thread ID
-int thread_id_getter(void){
+int 
+thread_id_getter(void)
+{
     int id = thread_id();
     return id;
 }
