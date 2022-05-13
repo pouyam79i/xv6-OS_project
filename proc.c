@@ -593,18 +593,16 @@ thread_create(void *stack){
   np->pgdir = curproc->pgdir;
   np->sz = curproc->sz;
   release(&ptable.lock);
-
-  // copy parent stack to child thread
-  memmove((void *)np->tstack, (void *)curproc->tstack, curproc->tstack - curproc->tf->esp);
+  *np->tf = *curproc->tf; //this goddamn line.
+  int stack_size = curproc->tstack - curproc->tf->esp;
   // set thread stack poitner to bottom of stack
-  np->tf->esp = np->tstack - (curproc->tstack - curproc->tf->esp);
+  np->tf->esp = np->tstack - stack_size;
+  // copy parent stack to child thread
+  memmove((void *)np->tf->esp, (void *)curproc->tf->esp, stack_size);
   // same for thread base pointer
   np->tf->ebp = np->tstack - (curproc->tstack - curproc->tf->ebp);
-
-  
   np->parent = curproc;
-  *np->tf = *curproc->tf;
-
+  //the aforementioned goddamned line used to be here and completely ruin everything i did to esp and ebp.
   // Clear %eax so that create_thread returns 0 in the child thread.
   np->tf->eax = 0;
 
