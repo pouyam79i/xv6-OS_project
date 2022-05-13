@@ -13,7 +13,7 @@ int main(void)
     if (tid > 0){
         printf(1,"Hello from parent process %d\n",getpid());
         thread_joiner(tid);
-        printf(1,"After thread");
+        printf(1,"After thread\n");
     }
     exit();
 }
