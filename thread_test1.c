@@ -3,26 +3,42 @@
 #include "thread.h"
 
 
-void t(void *);
+void route_t(void *);
+void question(void);
 
-int global = 0;
+int limit = 4;
+int base = 0;
 
 int main(void)
 {
-    uint tid = thread_creator(&t, 0);
+    printf(2, "Base: %d, Limit: %d\n", base, limit);
+    uint tid = thread_creator(&route_t, 0);
     if (tid > 0){
-        printf(1,"Hello from parent process %d\n",getpid());
         thread_joiner(tid);
-        printf(1,"After thread\n");
+    }else{
+        printf(0, "ID:[Parent] => Failed to cread chiled thread\n");
     }
     exit();
 }
 
-void t(void *arg)
+void route_t(void *arg)
 {
-    int a = 0;
-    printf(1, "Hello from Thread %d\n",getpid());
-    for(int i = 0; i < 1000; i++)
-        a += 1;
+    question();
+    return;
+}
+
+void question(void){
+    base++;
+    if(base < limit){
+        printf(1, "ID:[%d] => [SUCCESS] 0\n", get_tid());
+        uint tid = thread_creator(&route_t, 0);
+        if(tid > 0){
+            thread_joiner(tid);
+        }else{
+            printf(1, "ID:[%d] => Failed to cread another thread\n", get_tid());
+        }
+    }else{
+        printf(1, "ID:[%d] => [FAILED] -1\n", get_tid());
+    }
     return;
 }
