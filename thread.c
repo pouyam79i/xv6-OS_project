@@ -59,8 +59,20 @@ thread_joiner(int tid)
 
 // returns thread ID
 int 
-thread_id_getter(void)
+get_tid(void)
 {
     int id = thread_id();
     return id;
+}
+
+// lock resources if you need them
+// you have to wait untill they are relaesed!
+void thread_mutex_lock(mutex_t * mutex){
+    while(mutex->lock == 1);
+    mutex->lock = 1;
+}
+
+// Unlock resources
+void thread_mutex_unlock(mutex_t * mutex){
+    mutex->lock = 0;
 }
