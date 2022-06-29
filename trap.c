@@ -47,6 +47,7 @@ trap(struct trapframe *tf)
   }
 
   switch(tf->trapno){
+  //processes come here every tick (10 million bus clocks)
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
       acquire(&tickslock);
@@ -104,8 +105,15 @@ trap(struct trapframe *tf)
   // If interrupts were on while locks held, would need to check nlock.
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
-    yield();
-
+  {
+    //cprintf("tick "); //debug messages to check behaviour
+    if(++(myproc()->bticks) >= QUANTUM)
+    {
+      //cprintf("boom\n");
+      myproc()->bticks = 0;
+      yield();
+    }
+  }
   // Check if the process has been killed since we yielded
   if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
     exit();

@@ -53,6 +53,7 @@ struct proc {
   uint ctime;
   uint tstack;                 // Stack top
   uint tcount;                 // thread count, -1 if is thread
+  uint bticks;            // number of ticks process was in burst (executing)
 };
 
 // Process memory is laid out contiguously, low addresses first:

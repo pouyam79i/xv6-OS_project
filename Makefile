@@ -29,7 +29,7 @@ OBJS = \
 	vm.o\
 
 # Cross-compiling (e.g., on Mac OS X)
- TOOLPREFIX = x86_64-elf-
+# TOOLPREFIX = x86_64-elf-
 
 # Using native tools (e.g., on X86 Linux)
 #TOOLPREFIX = 
@@ -184,6 +184,7 @@ UPROGS=\
 	_getTicksTest\
 	_getProcInfoTest\
 	_thread_test1\
+	_rr_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -259,6 +260,7 @@ EXTRA=\
 	getTicksTest.c\
 	getProcInfoTest.c\
 	thread_test1\
+	rr_test\
 
 dist:
 	rm -rf dist
