@@ -14,6 +14,9 @@ extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
 uint ticks;
 
+// defined in proc.c
+extern int schedtype;
+
 void
 tvinit(void)
 {
@@ -106,12 +109,25 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
   {
+    ++(myproc()->bticks);
     //cprintf("tick "); //debug messages to check behaviour
-    if(++(myproc()->bticks) >= QUANTUM)
+    if (schedtype == 0) // RR with quantum = 1 tick
     {
-      //cprintf("boom\n");
       myproc()->bticks = 0;
       yield();
+    }
+    else if (schedtype == 1) // RR with quantum = QUANTUM ticks
+    {
+      if(myproc()->bticks >= QUANTUM)
+      {
+        //cprintf("boom\n");
+        myproc()->bticks = 0;
+        yield();
+      }
+    }
+    else if (schedtype == 2) //Priority Scheduling
+    {
+      //check for priority i guess? not sure what's different
     }
   }
   // Check if the process has been killed since we yielded

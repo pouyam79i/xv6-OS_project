@@ -20,6 +20,16 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+/*
+* Scheduler Type
+* 0: Round Robin with quantum = 1 tick
+* 1: Round Robin with quantum = QUANTUM tick (set in param.h)
+* 2: Priority Scheduling (6 levels)
+* 3: Multi Level Queue
+* 4: Lottery Scheduling
+*/
+int schedtype = 0;
+
 void
 pinit(void)
 {
