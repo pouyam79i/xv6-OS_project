@@ -54,6 +54,7 @@ trap(struct trapframe *tf)
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
       acquire(&tickslock);
+      //TODO: set process variables
       ticks++;
       wakeup(&ticks);
       release(&tickslock);

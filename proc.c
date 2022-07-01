@@ -28,6 +28,7 @@ static void wakeup1(void *chan);
 * 3: Multi Level Queue
 * 4: Lottery Scheduling
 */
+// TODO: ChangePolicy Pouya
 int schedtype = 1;
 
 void
@@ -243,6 +244,7 @@ fork(void)
 void
 exit(void)
 {
+  //TODO: set process Termination time
   struct proc *curproc = myproc();
   struct proc *p;
   int fd;
@@ -349,7 +351,7 @@ scheduler(void)
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(schedtype == 0 || schedtype == 1)
+      if(schedtype == 0 || schedtype == 1) // Round Robin
       {
         if(p->state != RUNNABLE)
             continue;
@@ -369,7 +371,7 @@ scheduler(void)
         // It should have changed its p->state before coming back.
         c->proc = 0;
       }
-      else if (schedtype == 2)
+      else if (schedtype == 2) // Priority
       {
         struct proc *lowest = ptable.proc;
         struct proc *p1;
@@ -390,6 +392,40 @@ scheduler(void)
         swtch(&(c->scheduler), lowest->context);
         switchkvm();
         c->proc = 0;
+      }
+      else if (schedtype == 3) // MFQ
+      {
+        // find the highest priority process
+        int lowest = 6;
+        struct proc *p1;
+        //find runnable process with lowest priority
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
+        {
+          if (p1->state != RUNNABLE)
+            continue;
+          if (p1->priority < lowest)
+            lowest = p1->priority;
+        }
+        // do a loop on all processes round robin style, scheduling that priority queue
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
+        {
+          if(p->state != RUNNABLE || p->priority != lowest)
+            continue;
+        // Switch to chosen process.  It is the process's job
+        // to release ptable.lock and then reacquire it
+        // before jumping back to us.
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
+
+        swtch(&(c->scheduler), p->context);
+        // Process comes back to scheduler from here
+        switchkvm();
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+        }
       }
     }
     release(&ptable.lock);
