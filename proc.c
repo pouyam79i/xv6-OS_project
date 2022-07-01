@@ -214,6 +214,7 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+  np->priority = curproc->priority;
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -350,7 +351,7 @@ scheduler(void)
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       struct proc * runnable_proc[NPROC];
-      if(p->state != RUNNABLE)
+    if(p->state != RUNNABLE)
         continue;
       
       // find least number for priority (it means h value)
