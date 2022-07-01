@@ -10,9 +10,10 @@ int main()
         set_priority(2);
         for(int i = 0; i <= 1000; i++)
         {
-            printf(1,"%d ", i);
+            printf(1,"PID: %d: %d --- ",getpid(), i);
         }
         printf(1,"\n");
+        exit();
     }
     else
     {
@@ -22,6 +23,6 @@ int main()
         }
         printf(1,"\n");
         wait();
+        exit();
     }
-    exit();
 }
