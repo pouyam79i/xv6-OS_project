@@ -126,12 +126,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->ctime = ticks;
+  p->ctime = ticks;   //setting creation time
   p->tstack = -1;     //initialize stack top
   p->tcount = 1;      //initialize thread count
   p->bticks = 0;      //initialize burst ticks
   p->priority = 3;    //initialize with moderate priority
-  p->ct = ticks;      //initialize creation time
   p->tt = 0;          //initialize termination time
   p->ru_t = 0;        //initialize running time
   p->re_t = 0;        //initialize ready time

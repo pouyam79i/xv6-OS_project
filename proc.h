@@ -50,12 +50,11 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   // Additional variable:
-  uint ctime;
   uint tstack;                 // Stack top
   uint tcount;                 // thread count, -1 if is thread
   uint bticks;                 // number of ticks process was in burst (executing)
   uint priority;               // Priority
-  uint ct;                     // creation time 
+  uint ctime;                  // creation time
   uint tt;                     // termination time
   uint ru_t;                   // running time
   uint re_t;                   // ready time
