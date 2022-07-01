@@ -346,14 +346,34 @@ scheduler(void)
     sti();
 
     // Loop over process table looking for process to run.
+    int counter = 0;
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      struct proc * runnable_proc[NPROC];
       if(p->state != RUNNABLE)
         continue;
-
+      
+      // find least number for priority (it means h value)
+      if(p->priority == 0){
+        goto set_proc;
+      }else{
+        runnable_proc[counter] = p;
+        counter++; 
+        if((p++) >= &ptable.proc[NPROC])
+          goto check;
+        continue;
+      }
+check:
+      struct proc * highest_priority_proc = runnable_proc[0];
+      for(int i = 1; i < counter; i++){
+          if(highest_priority_proc->priority > runnable_proc[i]->priority){
+            highest_priority_proc = runnable_proc[i];
+          }
+      }
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
+set_proc:
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
