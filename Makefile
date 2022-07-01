@@ -176,6 +176,8 @@ UPROGS=\
 	_rr_test\
 	_rr_test1\
 	_priority_test_internal\
+	_ps_test\
+	_mlq_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -254,6 +256,8 @@ EXTRA=\
 	rr_test\
 	rr_test1\
 	priority_test_internal\
+	ps_test\
+	mlq_test\
 
 dist:
 	rm -rf dist
