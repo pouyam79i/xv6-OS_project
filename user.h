@@ -34,7 +34,7 @@ int thread_join(uint tid);
 int set_priority(uint priority);
 int change_policy(int new_policy);
 int update_proc_timing(void);
-int get_proc_timing(int pid);
+int get_proc_timing(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
