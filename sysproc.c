@@ -147,3 +147,11 @@ int
 sys_update_proc_timing(void){
   return update_proc_timing();
 }
+
+int 
+sys_get_proc_timing(void){
+  int pid = 0;
+  if(argint(0, &pid) < 0)
+    return -1;
+  return get_proc_timing(pid);
+}

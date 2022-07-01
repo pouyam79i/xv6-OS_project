@@ -34,3 +34,4 @@
 #define SYS_set_priority 27
 #define SYS_change_policy 28
 #define SYS_update_proc_timing 29
+#define SYS_get_proc_timing 30

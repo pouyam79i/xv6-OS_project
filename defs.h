@@ -131,6 +131,7 @@ int             thread_join(uint);
 int             set_priority(uint priority);
 int             change_policy(int new_policy);
 int             update_proc_timing(void);
+int             get_proc_timing(int pid);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

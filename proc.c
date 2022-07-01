@@ -861,3 +861,29 @@ update_proc_timing(void){
   release(&ptable.lock);
   return 0;
 }
+
+// prints timing info of pid if found
+int 
+get_proc_timing(int pid){
+  struct proc *p;
+  int found = 0;
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->pid == pid){
+      found = 1;
+      break;
+    }
+  }
+  if(found == 1){ 
+    // cprintf("For PID %d: {ct: %d, tt: %d, re_t: %d, ru_t: %d, st: %d}\n", p->pid, p->ctime, p->re_t, p->ru_t, p->st);
+    int waiting_time = p->st + p->re_t;
+    int turnaround_time = waiting_time + p->ru_t;
+    cprintf("For PID %d: {\ncreation time: %d,\ntermination time: %d,\nturnaround time: %d,\nburst time: %d,\nwaiting time: %d\n}\n", p->pid, p->ctime, p->tt, turnaround_time, p->ru_t, waiting_time);
+  }else{
+    cprintf("This %d PID does not exist\n!", pid);
+  }
+  release(&ptable.lock);
+  if(found == 1)
+    return 0;
+  return -1;
+}
