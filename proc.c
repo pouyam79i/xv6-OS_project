@@ -846,9 +846,19 @@ set_priority(uint priority){
 // warning: ptable must be unlock befor this syscall
 int
 update_proc_timing(void){
+  struct proc *p;
   acquire(&ptable.lock);
-
-
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNABLE){
+      p->re_t++;    // increasing ready time
+    }else if (p->state == RUNNING)
+    {
+      p->ru_t++;    // increasing running time
+    }else if (p->state == SLEEPING)
+    {
+      p->st++;      // increasing sleeping time
+    }
+  }
   release(&ptable.lock);
   return 0;
 }
