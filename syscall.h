@@ -32,3 +32,4 @@
 
 // Phase 3 System Calls
 #define SYS_set_priority 27
+#define SYS_change_policy 28

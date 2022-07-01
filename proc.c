@@ -30,6 +30,16 @@ static void wakeup1(void *chan);
 */
 // TODO: ChangePolicy Pouya
 int schedtype = 1;
+int
+change_policy(int new_policy){
+  if(new_policy < 0 && new_policy > 4){
+    return -1;
+  }
+  acquire(&ptable.lock);
+  schedtype = new_policy;
+  release(&ptable.lock);
+}
+
 
 void
 pinit(void)
