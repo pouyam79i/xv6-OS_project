@@ -12,6 +12,25 @@ struct {
   struct proc proc[NPROC];
 } ptable;
 
+struct ticket {
+  struct proc *proc;
+  uint tickets;
+};
+
+unsigned int g_seed = 0;
+
+// Used to seed the generator.           
+void fast_srand(int seed) {
+    g_seed = seed;
+}
+
+// Compute a pseudorandom integer.
+// Output value in range [0, 32767]
+int rand(void) {
+    g_seed = (214013*g_seed+2531011);
+    return (g_seed>>16)&0x7FFF;
+}
+
 static struct proc *initproc;
 
 int nextpid = 1;
@@ -29,7 +48,7 @@ static void wakeup1(void *chan);
 * 4: Lottery Scheduling
 */
 // TODO: ChangePolicy Pouya
-int schedtype = 1;
+int schedtype = 4;
 
 void
 pinit(void)
@@ -409,6 +428,8 @@ scheduler(void)
         // do a loop on all processes round robin style, scheduling that priority queue
         for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
         {
+          if(schedtype != 3)
+            break;
           if(p->state != RUNNABLE || p->priority != lowest)
             continue;
         // Switch to chosen process.  It is the process's job
@@ -425,6 +446,57 @@ scheduler(void)
         // Process is done running for now.
         // It should have changed its p->state before coming back.
         c->proc = 0;
+        }
+      }
+      else if (schedtype == 4) // Lottery Scheduling
+      {
+        struct ticket active_tickets[NPROC];
+        uint ticket_count = 0;
+        uint active_count = 0;
+        struct proc *p1;
+        // find total tickets of active processes
+        // each process has 'priority' tickets
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
+        {
+          if (p1->state != RUNNABLE)
+            continue;
+          active_tickets[active_count].proc = p1;
+          active_tickets[active_count].tickets = p1->priority;
+          active_count += 1;
+          ticket_count += p1->priority;
+        }
+        // main scheduler loop
+        while(ticket_count > 0)
+        {
+          int random = rand() % ticket_count;
+          //cprintf("%d", random);
+          //find which process the ticket belongs to
+          int i;
+          int passed = 0; //number of tickets that we've "passed" in the loop
+          for(i = 0; i < active_count; i++)
+          {
+            if((passed + active_tickets[i].tickets) >= random)
+            {
+              //found
+              break;
+            }
+            else
+            {
+              passed += active_tickets[i].tickets;
+            }
+          }
+          struct proc *p_selected = active_tickets[i].proc;
+          //cprintf("\n%d %d %s\n", p_selected->kstack, p_selected->pid, p_selected->name);
+          // remove a ticket from selected process
+          ticket_count -= 1;
+          active_tickets[i].tickets -= 1;
+          // run selected processs
+          c->proc = p_selected;
+          switchuvm(p_selected);
+          p_selected->state = RUNNING;
+          swtch(&(c->scheduler), p_selected->context);
+          switchkvm();
+          c->proc = 0;
         }
       }
     }
