@@ -185,6 +185,8 @@ UPROGS=\
 	_getProcInfoTest\
 	_thread_test1\
 	_rr_test\
+	_rr_test1\
+	_priority_test_internal\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -261,6 +263,8 @@ EXTRA=\
 	getProcInfoTest.c\
 	thread_test1\
 	rr_test\
+	rr_test1\
+	priority_test_internal\
 
 dist:
 	rm -rf dist

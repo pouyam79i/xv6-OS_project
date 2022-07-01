@@ -28,7 +28,7 @@ static void wakeup1(void *chan);
 * 3: Multi Level Queue
 * 4: Lottery Scheduling
 */
-int schedtype = 0;
+int schedtype = 1;
 
 void
 pinit(void)
@@ -102,7 +102,7 @@ found:
   p->tstack = -1;     //initialize stack top
   p->tcount = 1;      //initialize thread count
   p->bticks = 0;      //initialize burst ticks
-  p->priority = 0;    //initializing with highest priority
+  p->priority = 3;    //initializing with moderate priority
 
   release(&ptable.lock);
 
@@ -347,44 +347,50 @@ scheduler(void)
     sti();
 
     // Loop over process table looking for process to run.
-    int counter = 0;
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      struct proc * runnable_proc[NPROC];
-    if(p->state != RUNNABLE)
-        continue;
-      
-      // find least number for priority (it means h value)
-      if(p->priority == 0){
-        goto set_proc;
-      }else{
-        runnable_proc[counter] = p;
-        counter++; 
-        if((p++) >= &ptable.proc[NPROC])
-          goto check;
-        continue;
-      }
-check:
-      struct proc * highest_priority_proc = runnable_proc[0];
-      for(int i = 1; i < counter; i++){
-          if(highest_priority_proc->priority > runnable_proc[i]->priority){
-            highest_priority_proc = runnable_proc[i];
-          }
-      }
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-set_proc:
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+      if(schedtype == 0 || schedtype == 1)
+      {
+        if(p->state != RUNNABLE)
+            continue;
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
+        // Switch to chosen process.  It is the process's job
+        // to release ptable.lock and then reacquire it
+        // before jumping back to us.
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
 
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+        swtch(&(c->scheduler), p->context);
+        // Process comes back to scheduler from here
+        switchkvm();
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+      }
+      else if (schedtype == 2)
+      {
+        struct proc *lowest = ptable.proc;
+        struct proc *p1;
+        //find process with lowest priority
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
+        {
+          if (p1->state != RUNNABLE)
+            continue;
+          else if (lowest->state != RUNNABLE)
+            lowest = p1;
+          else if (lowest->priority > p1->priority)
+            lowest = p1;
+        }
+        //switch to lowest
+        c->proc = lowest;
+        switchuvm(lowest);
+        lowest->state = RUNNING;
+        swtch(&(c->scheduler), lowest->context);
+        switchkvm();
+        c->proc = 0;
+      }
     }
     release(&ptable.lock);
 
