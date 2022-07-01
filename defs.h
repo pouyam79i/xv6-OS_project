@@ -127,6 +127,8 @@ int             getProcInfo(void);
 int             thread_create(void *stack);
 int             thread_id(void);
 int             thread_join(uint);
+// Phase 3 System call
+int             set_priority(uint priority);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

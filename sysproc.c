@@ -126,3 +126,11 @@ sys_thread_join(void)
     return -1;
   return thread_join(tid);
 }
+
+int
+sys_set_priority(void){
+  int priority = 0;
+  if(argint(0, &priority) < 0)
+    return -1;
+  return set_priority(priority);
+}

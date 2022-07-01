@@ -676,3 +676,15 @@ thread_join(uint tid){
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
 }
+
+// Used to set or change priority of processes in scheduler
+int
+set_priority(uint priority){
+  struct proc *curproc = myproc();
+  acquire(&ptable.lock);
+  curproc->priority = priority;
+  release(&ptable.lock);
+  if(curproc->priority != priority)
+    return -1;
+  return priority;
+}

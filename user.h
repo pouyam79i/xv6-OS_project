@@ -30,6 +30,8 @@ int getProcInfo(void);
 int thread_create(void *stack);
 int thread_id(void);
 int thread_join(uint tid);
+// Phase 3 System Calls:
+int set_priority(uint priority);
 
 // ulib.c
 int stat(const char*, struct stat*);

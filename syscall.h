@@ -29,3 +29,6 @@
 #define SYS_thread_create 24
 #define SYS_thread_id 25
 #define SYS_thread_join 26
+
+// Phase 3 System Calls
+#define SYS_set_priority 27
