@@ -99,9 +99,10 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->ctime = ticks;
-  p->tstack = -1; //initialize stack top
-  p->tcount = 1; //initialize thread count
-  p->bticks = 0; //initialize burst ticks
+  p->tstack = -1;     //initialize stack top
+  p->tcount = 1;      //initialize thread count
+  p->bticks = 0;      //initialize burst ticks
+  p->priority = 0;    //initializing with highest priority
 
   release(&ptable.lock);
 
