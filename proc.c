@@ -47,7 +47,6 @@ static void wakeup1(void *chan);
 * 3: Multi Level Queue
 * 4: Lottery Scheduling
 */
-// TODO: ChangePolicy Pouya
 int schedtype = 1;
 int
 change_policy(int new_policy){
@@ -131,7 +130,12 @@ found:
   p->tstack = -1;     //initialize stack top
   p->tcount = 1;      //initialize thread count
   p->bticks = 0;      //initialize burst ticks
-  p->priority = 3;    //initializing with moderate priority
+  p->priority = 3;    //initialize with moderate priority
+  p->ct = ticks;      //initialize creation time
+  p->tt = 0;          //initialize termination time
+  p->ru_t = 0;        //initialize running time
+  p->re_t = 0;        //initialize ready time
+  p->st = 0;          //initialize sleeping time
 
   release(&ptable.lock);
 
@@ -272,7 +276,7 @@ fork(void)
 void
 exit(void)
 {
-  //TODO: set process Termination time
+
   struct proc *curproc = myproc();
   struct proc *p;
   int fd;
@@ -309,6 +313,7 @@ exit(void)
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
+  curproc->tt = ticks;        // setting termination time
   sched();
   panic("zombie exit");
 }

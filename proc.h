@@ -55,6 +55,11 @@ struct proc {
   uint tcount;                 // thread count, -1 if is thread
   uint bticks;                 // number of ticks process was in burst (executing)
   uint priority;               // Priority
+  uint ct;                     // creation time 
+  uint tt;                     // termination time
+  uint ru_t;                   // running time
+  uint re_t;                   // ready time
+  uint st;                     // sleeping time
 };
 
 // Process memory is laid out contiguously, low addresses first:
