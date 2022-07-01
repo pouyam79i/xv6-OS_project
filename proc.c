@@ -56,6 +56,7 @@ change_policy(int new_policy){
   acquire(&ptable.lock);
   schedtype = new_policy;
   release(&ptable.lock);
+  return 0;
 }
 
 void
