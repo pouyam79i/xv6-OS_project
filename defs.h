@@ -130,6 +130,7 @@ int             thread_join(uint);
 // Phase 3 System call
 int             set_priority(uint priority);
 int             change_policy(int new_policy);
+int             update_proc_timing(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

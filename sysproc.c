@@ -142,3 +142,8 @@ sys_change_policy(void){
     return -1;
   return change_policy(policy);
 }
+
+int 
+sys_update_proc_timing(void){
+  return update_proc_timing();
+}

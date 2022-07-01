@@ -53,9 +53,10 @@ trap(struct trapframe *tf)
   //processes come here every tick (10 million bus clocks)
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
+      // TODO: check for deadlock. it may occur ***** !!!!!!!
       acquire(&tickslock);
-      //TODO: set process variables
       ticks++;
+      update_proc_timing();
       wakeup(&ticks);
       release(&tickslock);
     }

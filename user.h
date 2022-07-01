@@ -33,6 +33,7 @@ int thread_join(uint tid);
 // Phase 3 System Calls:
 int set_priority(uint priority);
 int change_policy(int new_policy);
+int update_proc_timing(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

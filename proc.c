@@ -709,7 +709,9 @@ int
 getTicks(void){
   // Priniting total passed clocks
   cprintf("Total Clocks: ");
+  acquire(&tickslock);
   cprintf("%d", ticks);
+  release(&tickslock);
   cprintf("\n");
   return 0;
 }
@@ -837,4 +839,16 @@ set_priority(uint priority){
   if(curproc->priority != priority)
     return -1;
   return priority;
+}
+
+// updates timing of processes
+// warning: remember to lock ticks befor calling this syscall
+// warning: ptable must be unlock befor this syscall
+int
+update_proc_timing(void){
+  acquire(&ptable.lock);
+
+
+  release(&ptable.lock);
+  return 0;
 }

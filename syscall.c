@@ -113,6 +113,7 @@ extern int sys_thread_join(void);
 // Phase 3 System Calls
 extern int sys_set_priority(void);
 extern int sys_change_policy(void);
+extern int sys_update_proc_timing(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -145,7 +146,8 @@ static int (*syscalls[])(void) = {
 [SYS_thread_join] sys_thread_join,
 // Phase 3 System Calls
 [SYS_set_priority] sys_set_priority,
-[SYS_change_policy] sys_change_policy
+[SYS_change_policy] sys_change_policy,
+[SYS_update_proc_timing] sys_update_proc_timing
 };
 
 void
