@@ -173,11 +173,11 @@ UPROGS=\
 	_getTicksTest\
 	_getProcInfoTest\
 	_thread_test1\
-	_rr_test\
 	_rr_test1\
 	_priority_test_internal\
 	_ps_test\
 	_mlq_test\
+	_lottery_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -253,11 +253,11 @@ EXTRA=\
 	getTicksTest.c\
 	getProcInfoTest.c\
 	thread_test1\
-	rr_test\
 	rr_test1\
 	priority_test_internal\
 	ps_test\
 	mlq_test\
+	lottery_test\
 
 dist:
 	rm -rf dist
