@@ -150,5 +150,8 @@ sys_update_proc_timing(void){
 
 int 
 sys_get_proc_timing(void){
-  return get_proc_timing();
+  void *ret;
+  if(argptr(0,(char**)&ret, sizeof(struct time_data)) < 0)
+    return -1;
+  return get_proc_timing(ret);
 }

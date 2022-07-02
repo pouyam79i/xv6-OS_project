@@ -50,7 +50,7 @@ static void wakeup1(void *chan);
 int schedtype = 1;
 int
 change_policy(int new_policy){
-  if(new_policy < 0 && new_policy > 4){
+  if(new_policy < 0){
     return -1;
   }
   acquire(&ptable.lock);
@@ -708,12 +708,12 @@ procdump(void)
 int
 getTicks(void){
   // Priniting total passed clocks
-  cprintf("Total Clocks: ");
-  acquire(&tickslock);
-  cprintf("%d", ticks);
-  release(&tickslock);
-  cprintf("\n");
-  return 0;
+  //cprintf("Total Clocks: ");
+  //acquire(&tickslock);
+  //cprintf("%d", ticks);
+  //release(&tickslock);
+  //cprintf("\n");
+  return ticks;
 }
 
 // This syscall will show processes and
@@ -865,14 +865,22 @@ update_proc_timing(void){
 
 // prints timing info of pid if found
 int 
-get_proc_timing(void){
+get_proc_timing(void *ret){
+  if(!ret)
+    return -1;
+  struct time_data *data = (struct time_data *)ret;
   struct proc *curproc;
   curproc = myproc();
   acquire(&ptable.lock);
   // cprintf("For PID %d: {ct: %d, tt: %d, re_t: %d, ru_t: %d, st: %d}\n", p->pid, p->ctime, p->re_t, p->ru_t, p->st);
-  int waiting_time = curproc->st + curproc->re_t;
-  int turnaround_time = waiting_time + curproc->ru_t;
-  cprintf("For PID %d: {\ncreation time: %d,\ntermination time: %d,\nturnaround time: %d,\nburst time: %d,\nwaiting time: %d\n}\n", curproc->pid, curproc->ctime, curproc->tt, turnaround_time, curproc->ru_t, waiting_time);
+/*   int waiting_time = curproc->st + curproc->re_t;
+  int turnaround_time = waiting_time + curproc->ru_t; */
+  data->ctime = curproc->ctime;
+  data->re_t = curproc->re_t;
+  data->ru_t = curproc->ru_t;
+  data->st = curproc->st;
+  data->tt = curproc->tt;
+  //cprintf("For PID %d: {\ncreation time: %d,\ntermination time: %d,\nturnaround time: %d,\nburst time: %d,\nwaiting time: %d\n}\n", curproc->pid, curproc->ctime, curproc->tt, turnaround_time, curproc->ru_t, waiting_time);
   release(&ptable.lock);
   return 0;
 }

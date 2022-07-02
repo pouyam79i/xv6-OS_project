@@ -125,7 +125,7 @@ trap(struct trapframe *tf)
     {
       if(myproc()->bticks >= myproc()->priority)
       {
-        //cprintf("boom\n");
+        cprintf("boom\n");
         myproc()->bticks = 0;
         yield();
       }
