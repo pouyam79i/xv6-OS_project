@@ -113,13 +113,22 @@ trap(struct trapframe *tf)
   {
     ++(myproc()->bticks);
     //cprintf("tick "); //debug messages to check behaviour
-    if (schedtype == 0 || schedtype == 3 || schedtype == 4)
+    if (schedtype == 0 || schedtype == 4)
     {
       // RR with quantum = 1 tick
       // MLQ
       // Lottery
       myproc()->bticks = 0;
       yield();
+    }
+    else if (schedtype == 3)
+    {
+      if(myproc()->bticks >= myproc()->priority)
+      {
+        //cprintf("boom\n");
+        myproc()->bticks = 0;
+        yield();
+      }
     }
     else if (schedtype == 1) // RR with quantum = QUANTUM ticks
     {
