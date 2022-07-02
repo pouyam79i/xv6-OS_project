@@ -444,22 +444,14 @@ scheduler(void)
         {
           if(schedtype != 3)
             break;
-          if(p->state != RUNNABLE || p->priority != lowest)
+          if(p1->state != RUNNABLE || p1->priority != lowest)
             continue;
-        // Switch to chosen process.  It is the process's job
-        // to release ptable.lock and then reacquire it
-        // before jumping back to us.
-        c->proc = p;
-        switchuvm(p);
-        p->state = RUNNING;
-
-        swtch(&(c->scheduler), p->context);
-        // Process comes back to scheduler from here
-        switchkvm();
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
+          c->proc = p1;
+          switchuvm(p1);
+          p1->state = RUNNING;
+          swtch(&(c->scheduler), p1->context);
+          switchkvm();
+          c->proc = 0;
         }
       }
       else if (schedtype == 4) // Lottery Scheduling

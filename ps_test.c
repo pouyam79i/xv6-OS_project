@@ -9,7 +9,7 @@ int main()
     int is_child = 0;
     int child_num = 0;
     uint priority = 7;
-    change_policy(3);           // seting scheduler policy to num 2 (priority scheduler)
+    change_policy(2);           // seting scheduler policy to num 2 (priority scheduler)
     for (int i = 0; i < 30; i++)
     {
         if(i % 5 == 0){
@@ -39,7 +39,6 @@ int main()
     }
     else
     {
-        set_priority(11);
         for (int i = 0; i < 30; i++)
             wait();
     }
